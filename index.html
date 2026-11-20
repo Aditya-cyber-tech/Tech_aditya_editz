@@ -1,1 +1,123 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Hub</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090d18;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:25px 18px;text-align:center;
+ background:linear-gradient(130deg,#161c3d,#422078);
+}
+header h1{font-size:30px;margin:5px}
+header p{color:#c9c5e9}
+main{max-width:850px;margin:auto;padding:18px}
+input{
+ width:100%;padding:15px;border-radius:12px;
+ border:1px solid #444b68;background:#151c30;
+ color:white;font-size:16px;margin:15px 0;
+}
+.categories{display:flex;gap:9px;flex-wrap:wrap}
+.categories button,.copy{
+ border:0;padding:11px 15px;border-radius:9px;
+ background:#292e49;color:white;cursor:pointer;
+}
+.categories button.active,.copy{
+ background:#7952ed;color:white;
+}
+h2{margin-top:28px}
+.card{
+ background:#151c2d;border:1px solid #292f48;
+ padding:17px;border-radius:14px;margin:14px 0;
+}
+.card h3{margin-top:0}
+.card p{color:#c3c8d8;line-height:1.6}
+.copy{font-weight:bold}
+footer{text-align:center;color:#929bb1;padding:25px}
+</style>
+</head>
+<body>
+<header>
+<h1>✨ AI PROMPT HUB</h1>
+<p>Your Ultimate AI Prompt Collection</p>
+</header>
+
+<main>
+<h2>Explore Prompts 🚀</h2>
+<input id="search" placeholder="🔍 Search your prompts..."
+oninput="render()">
+
+<div class="categories" id="categories">
+<button class="active" onclick="choose('All',this)">All</button>
+<button onclick="choose('Photo',this)">📸 Photo</button>
+<button onclick="choose('Video',this)">🎬 Video</button>
+<button onclick="choose('Character',this)">🤖 Character</button>
+<button onclick="choose('Editing',this)">✨ Editing</button>
+</div>
+
+<h2>Latest Prompts</h2>
+<div id="prompts"></div>
+</main>
+
+<footer>
+© 2026 AI PROMPT HUB | Created by Aditya
+</footer>
+
+<script>
+const data=[
+{title:"Cinematic Portrait",cat:"Photo",
+prompt:"Create a cinematic 8K portrait using the uploaded photo. Preserve the original face and identity. Add professional lighting and a beautiful background."},
+{title:"AI Video Generator",cat:"Video",
+prompt:"Create a smooth cinematic video from the uploaded image. Preserve the character's identity, natural movement and original appearance."},
+{title:"Unique AI Character",cat:"Character",
+prompt:"Create a unique 3D AI character based on the reference image. Maintain consistent facial features, clothing details and identity."},
+{title:"Professional Photo Editing",cat:"Editing",
+prompt:"Enhance the uploaded photo with professional lighting, realistic details, sharp focus and a cinematic color grade. Do not change the face."}
+];
+
+let selected="All";
+
+function choose(cat,btn){
+ selected=cat;
+ document.querySelectorAll(".categories button")
+ .forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ render();
+}
+
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=data.filter(p=>
+ (selected==="All"||p.cat===selected)&&
+ (p.title.toLowerCase().includes(q)||
+ p.prompt.toLowerCase().includes(q))
+ );
+ document.getElementById("prompts").innerHTML=
+ list.map((p,i)=>`
+ <div class="card">
+ <h3>${p.title}</h3>
+ <small>${p.cat} PROMPT</small>
+ <p>${p.prompt}</p>
+ <button class="copy" onclick="copyPrompt(${data.indexOf(p)})">
+ 📋 Copy Prompt
+ </button>
+ </div>`).join("")||
+ "<p>No prompts found.</p>";
+}
+
+function copyPrompt(i){
+ navigator.clipboard.writeText(data[i].prompt)
+ .then(()=>alert("Prompt Copied!"))
+ .catch(()=>alert("Please allow clipboard access."));
+}
+render();
+</script>
+</body>
+</html>
+
